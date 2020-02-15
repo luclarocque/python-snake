@@ -118,9 +118,16 @@ def test_avoidEdges():
     assert avoidEdges(data, possible, 1) == {'up', 'down', 'right'}
 
 
+def test_nextMove():
+    data = resetData(1)
+    print("should return a single move")
+    print(nextMove(data))
+
+
 if __name__ == "__main__":
     test_hitWall()
     test_hitSnake()
     test_possibleMoves()
     test_distHeadToWalls()
     test_avoidEdges()
+    test_nextMove()

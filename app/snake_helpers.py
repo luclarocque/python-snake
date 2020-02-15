@@ -110,5 +110,5 @@ def nextMove(data):
     """
     moves = possibleMoves(data)
     moves = avoidEdges(data, moves, edgeBuffer=1)
-    move = random.choice(moves)
+    move = random.choice(list(moves))
     return move
