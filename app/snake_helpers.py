@@ -108,7 +108,9 @@ def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
     """
-    moves = possibleMoves(data)
-    moves = avoidEdges(data, moves, edgeBuffer=1)
-    move = random.choice(list(moves))
+    possMoves = possibleMoves(data)
+    subsetMoves = avoidEdges(data, possMoves, edgeBuffer=3)
+    if len(subsetMoves) == 0:
+        subsetMoves = possMoves
+    move = random.choice(list(subsetMoves))
     return move
