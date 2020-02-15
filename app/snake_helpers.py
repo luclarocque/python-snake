@@ -1,4 +1,6 @@
 import random
+from scipy import spatial
+from coord_tools import *
 
 
 def movedHead(data, moveDirection):
@@ -66,25 +68,6 @@ def possibleMoves(data):
     return goodMoves
 
 
-def distHeadToWalls(head, w, h):
-    """
-    distHeadToWalls returns a dict
-        {key=direction : val=distance to wall in that direction}
-    head can be either data['you']['body'][0]   OR   a tuple (x,y)
-    w, h are the board width and board height, respectively
-    """
-    # get x and y coords of head
-    if isinstance(head, tuple):
-        x = head[0]
-        y = head[1]
-    else:
-        x = head['x']
-        y = head['y']
-
-    switchDistance = dict(up=y, down=(h - 1) - y, left=x, right=(w - 1) - x)
-    return switchDistance
-
-
 def avoidEdges(data, setMoves, edgeBuffer=1):
     """
     avoidEdges takes setMoves, a set of possible moves, and returns
@@ -104,13 +87,34 @@ def avoidEdges(data, setMoves, edgeBuffer=1):
     return goodMoves
 
 
+def nearestFood1(data):
+    head = data['you']['body'][0]
+    listFood = data['board']['food']
+    if not listFood:
+        return None
+    nearest = listFood[0]
+    for food in listFood:
+        if distance(head, food) < distance(head, nearest):
+            nearest = food
+    return nearest
+
+
+def nearestFood(data):
+    head = dictToTuple(data['you']['body'][0])
+    listFood = listDictToTuple(data['board']['food'])
+    tree = spatial.KDTree(listFood)
+    print(tree.query(head))
+    dist, indNearest = tree.query(head)
+    return listFood[indNearest]
+
+
 def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
     """
     possMoves = possibleMoves(data)
     subsetMoves = avoidEdges(data, possMoves, edgeBuffer=3)
-    if len(subsetMoves) == 0:
+    if not subsetMoves:
         subsetMoves = possMoves
     move = random.choice(list(subsetMoves))
     return move
