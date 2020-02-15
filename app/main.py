@@ -34,7 +34,10 @@ def ping():
     """
     return ping_response()
 
+
 games = {}
+
+
 @bottle.post('/start')
 def start():
     data = bottle.request.json
@@ -45,6 +48,7 @@ def start():
             request's data if necessary.
     """
     games[data['game']['id']] = data
+    print("*-"*5, 'START GAME', "-*"*5)
     print(json.dumps(data))
 
     color = "#22FFEE"
@@ -55,6 +59,7 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    games[data['game']['id']] = data
 
     """
     TODO: Using the data from the endpoint request object, your
@@ -76,8 +81,7 @@ def end():
         clean up any stateful objects here.
     """
     print(json.dumps(data))
-    games[data['game']['id']] = []
-
+    games[data['game']['id']] = {}
 
     return end_response()
 
