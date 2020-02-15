@@ -2,7 +2,7 @@ import json
 from app.snake_helpers import *
 
 
-def resetData(example=1):
+def resetData(exampleNum):
     def switchFile(fileNumber):
         switch = {
             1: '../examples/example_only_you.json',
@@ -10,7 +10,7 @@ def resetData(example=1):
         }
         return switch[fileNumber]
 
-    jsonFile = switchFile(example)
+    jsonFile = switchFile(exampleNum)
     with open(jsonFile) as jsonData:
         data = json.load(jsonData)
     return data
@@ -19,7 +19,7 @@ def resetData(example=1):
 def redefineYou(data, listPoints):
     """
     redefineYou modifies data in-place
-    listPoints: first elem is head, must be in order
+    listPoints: list of tuples (x,y); first elem is head, must be in order
     """
     data['you']['body'] = []
     for pt in listPoints:
@@ -48,7 +48,7 @@ def addSnake(data, listPoints):
 
 
 def test_hitWall():
-    data = resetData()
+    data = resetData(1)
 
     print("should collide with wall, going up")
     redefineYou(data, [(6, 0)])
@@ -90,14 +90,37 @@ def test_hitSnake():
 def test_possibleMoves():
     data = resetData(1)
     print("should be able to move any direction")
-    assert possibleMoves(data) == ['up', 'down', 'left', 'right']
+    assert possibleMoves(data) == {'up', 'down', 'left', 'right'}
 
     data = resetData(2)
     print("should be able to move left or right (tail is right)")
-    assert possibleMoves(data) == ['left', 'right']
+    assert possibleMoves(data) == {'left', 'right'}
+
+
+def test_distHeadToWalls():
+    data = resetData(1)
+    head = data['you']['body'][0]
+    w = data['board']['width']
+    h = data['board']['height']
+
+    assert distHeadToWalls(head, w, h) == {
+        'up': 3,
+        'down': 11,
+        'left': 1,
+        'right': 13
+    }
+
+
+def test_avoidEdges():
+    data = resetData(1)
+    print("should avoid being next to wall (do not allow left)")
+    possible = possibleMoves(data)
+    assert avoidEdges(data, possible, 1) == {'up', 'down', 'right'}
 
 
 if __name__ == "__main__":
     test_hitWall()
     test_hitSnake()
     test_possibleMoves()
+    test_distHeadToWalls()
+    test_avoidEdges()
