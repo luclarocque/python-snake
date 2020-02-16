@@ -85,6 +85,9 @@ def rateFood(data):
         return None
     tree = spatial.KDTree(listFood)
     distances, indices = tree.query(head, k=len(listFood), p=1)
+    if isinstance(distances, float):  # kdtree.query returns float if only 1 food
+        distances = [distances]
+        indices = [indices]
     distances = map(int, distances)
     ratings = [(listFood[indices[i]], distances[i]) for i in range(len(distances))]
     print(ratings)

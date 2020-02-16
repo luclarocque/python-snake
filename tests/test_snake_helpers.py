@@ -95,6 +95,10 @@ def test_nextMove():
     print("nextMove", nextMove(data))
     assert not hitAny(data, nextMove(data))
 
+    data = resetData(3)
+    print("nextMove", nextMove(data))
+    assert not hitAny(data, nextMove(data))
+
 
 if __name__ == "__main__":
     test_hitWall()

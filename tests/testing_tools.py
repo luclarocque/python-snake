@@ -5,7 +5,8 @@ def resetData(exampleNum):
     def switchFile(fileNumber):
         switch = {
             1: '../examples/example_only_you.json',
-            2: '../examples/example_two_snakes.json'
+            2: '../examples/example_two_snakes.json',
+            3: '../examples/example_facing_wall.json'
         }
         return switch[fileNumber]
 

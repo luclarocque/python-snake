@@ -11,6 +11,7 @@ def movedHead(data, moveDirection):
     }
     return switchHead[moveDirection]
 
+
 def distance(a, b):
     """
     distance computes the Manhattan distance between a and b
