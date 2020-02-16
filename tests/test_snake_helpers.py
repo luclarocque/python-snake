@@ -69,8 +69,7 @@ def test_distHeadToWalls():
 def test_avoidEdges():
     data = resetData(1)
     # print("should avoid being next to wall (do not allow left)")
-    possible = possibleMoves(data)
-    assert avoidEdges(data, possible, 1) == {'up', 'down', 'right'}
+    assert avoidEdges(data, 1) == {'up', 'down', 'right'}
 
 
 def test_distance():
@@ -86,7 +85,7 @@ def test_rateFood():
     assert rateFood(data) is None
 
     data = resetData(2)
-    # print("should be (0,1)")
+    # print("should return ordered list with nearest food first")
     assert rateFood(data) == [((1, 5), 2), ((0, 1), 3), ((9, 9), 14)]
 
 
@@ -94,6 +93,7 @@ def test_nextMove():
     data = resetData(2)
     # print("should return a single move")
     print("nextMove", nextMove(data))
+    assert not hitAny(data, nextMove(data))
 
 
 if __name__ == "__main__":

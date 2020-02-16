@@ -54,22 +54,20 @@ def possibleMoves(data):
     return goodMoves
 
 
-def avoidEdges(data, setMoves, edgeBuffer=1):
+def avoidEdges(data, edgeBuffer=1):
     """
-    avoidEdges takes setMoves, a set of possible moves, and returns
-        a subset of moves whose distance to walls is >=edgeBuffer.
+    avoidEdges returns a set of moves whose distance to walls is >=edgeBuffer
     """
     w = data['board']['width']
     h = data['board']['height']
 
     goodMoves = set()
-    for mv in setMoves:
+    for mv in ['up', 'down', 'left', 'right']:
         newHead = movedHead(data, mv)
         switchDistance = distHeadToWalls(newHead, w, h)
         dist = switchDistance[mv]
         if dist >= edgeBuffer:
             goodMoves |= {mv}
-
     return goodMoves
 
 
@@ -100,24 +98,29 @@ def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
     """
-    health = data['you']['health']
+    # health = data['you']['health']
     possMoves = possibleMoves(data)
+    print("possMoves", possMoves)
 
-    if health < 75:
-        foodList = rateFood(data)
-        foodMoves = possMoves
-        # find a move that brings you closer to the nearest 2 foods
-        for point in foodList[:2]:
-            foodMoves &= goToPoint(data, point)  # intersect sets: common moves
-        # otherwise find moves that will approach any food
-        if not foodMoves:
-            foodMoves = {}
-            for point in foodList:
-                foodMoves |= goToPoint(data, point)
-        subsetMoves = foodMoves & possMoves
-    else:
-        subsetMoves = avoidEdges(data, possMoves, edgeBuffer=2)
+    foodList = [tup[0] for tup in rateFood(data)]
+    foodMoves = set(possMoves)  # copy the set of possMoves
+    # find a move that brings you closer to the nearest food
+    print(foodList[:1])
+    for point in foodList[:1]:
+        foodMoves &= goToPoint(data, point)  # intersect sets: common moves
+    print("moves toward nearest food", foodMoves)
+    # otherwise find moves that will approach any food
+    if not foodMoves:
+        print("can't go towards nearest food")
+        foodMoves = set()
+        for point in foodList:
+            foodMoves |= goToPoint(data, point)
+    subsetMoves = foodMoves & possMoves
+    print("possible foodMoves", subsetMoves)
+    # else:
+    #     subsetMoves = avoidEdges(data, possMoves, edgeBuffer=2)
     if not subsetMoves:
         subsetMoves = possMoves
     move = random.choice(list(subsetMoves))
+    print("final moveSet", subsetMoves)
     return move
