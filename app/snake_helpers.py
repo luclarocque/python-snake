@@ -3,20 +3,6 @@ from scipy import spatial
 from coord_tools import *
 
 
-def movedHead(data, moveDirection):
-    """
-    movedHead returns a tuple (x,y) of the head after moving in moveDirection
-    """
-    head = data['you']['body'][0]
-    switchHead = {
-        'up': (head['x'], head['y'] - 1),
-        'down': (head['x'], head['y'] + 1),
-        'left': (head['x'] - 1, head['y']),
-        'right': (head['x'] + 1, head['y'])
-    }
-    return switchHead[moveDirection]
-
-
 def hitWall(data, moveDirection):
     w = data['board']['width']
     h = data['board']['height']
@@ -87,33 +73,50 @@ def avoidEdges(data, setMoves, edgeBuffer=1):
     return goodMoves
 
 
-def nearestFood1(data):
-    head = data['you']['body'][0]
-    listFood = data['board']['food']
-    if not listFood:
-        return None
-    nearest = listFood[0]
-    for food in listFood:
-        if distance(head, food) < distance(head, nearest):
-            nearest = food
-    return nearest
-
-
-def nearestFood(data):
+def rateFood(data):
+    """
+    rateFood returns None (no food) or a list of tuples ((x, y), cost)
+        where (x,y) are the coords of the food, and
+        cost is determined by distance (and other metrics???)
+    Note: lower rating => better
+    """
+    # TODO: add more to cost, e.g., is it central? is it in a large zone?
     head = dictToTuple(data['you']['body'][0])
     listFood = listDictToTuple(data['board']['food'])
+    if not listFood:
+        return None
     tree = spatial.KDTree(listFood)
-    print(tree.query(head))
-    dist, indNearest = tree.query(head)
-    return listFood[indNearest]
+    distances, indices = tree.query(head, k=len(listFood), p=1)
+    distances = map(int, distances)
+    ratings = [(listFood[indices[i]], distances[i]) for i in range(len(distances))]
+    print(ratings)
+    return ratings
 
 
+# TODO: iterate through goToPoint() with all foods in output of rateFood().
+#  Assign weight based on inverse of cost (rating), and choose most strongly
+#  weighted direction as next move.
 def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
     """
+    health = data['you']['health']
     possMoves = possibleMoves(data)
-    subsetMoves = avoidEdges(data, possMoves, edgeBuffer=3)
+
+    if health < 75:
+        foodList = rateFood(data)
+        foodMoves = possMoves
+        # find a move that brings you closer to the nearest 2 foods
+        for point in foodList[:2]:
+            foodMoves &= goToPoint(data, point)  # intersect sets: common moves
+        # otherwise find moves that will approach any food
+        if not foodMoves:
+            foodMoves = {}
+            for point in foodList:
+                foodMoves |= goToPoint(data, point)
+        subsetMoves = foodMoves & possMoves
+    else:
+        subsetMoves = avoidEdges(data, possMoves, edgeBuffer=2)
     if not subsetMoves:
         subsetMoves = possMoves
     move = random.choice(list(subsetMoves))

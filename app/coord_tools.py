@@ -1,4 +1,15 @@
-
+def movedHead(data, moveDirection):
+    """
+    movedHead returns a tuple (x,y) of the head after moving in moveDirection
+    """
+    head = data['you']['body'][0]
+    switchHead = {
+        'up': (head['x'], head['y'] - 1),
+        'down': (head['x'], head['y'] + 1),
+        'left': (head['x'] - 1, head['y']),
+        'right': (head['x'] + 1, head['y'])
+    }
+    return switchHead[moveDirection]
 
 def distance(a, b):
     """
@@ -37,3 +48,22 @@ def distHeadToWalls(head, w, h):
 
     switchDistance = dict(up=y, down=(h - 1) - y, left=x, right=(w - 1) - x)
     return switchDistance
+
+
+def goToPoint(data, point):
+    """
+    goToPoint returns a set of moves that decreases the distance to the point
+    """
+    head = dictToTuple(data['you']['body'][0])
+    moves = set()
+    if point[0] > head[0]:
+        moves |= {'right'}
+    elif point[0] < head[0]:
+        moves |= {'left'}
+    if point[1] > head[1]:
+        moves |= {'down'}
+    elif point[1] < head[1]:
+        moves |= {'up'}
+    return moves
+
+# TODO: visualize board given json data

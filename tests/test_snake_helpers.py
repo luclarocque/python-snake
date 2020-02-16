@@ -80,18 +80,18 @@ def test_distance():
     assert distance(a, b) == 3
 
 
-def test_nearestFood():
+def test_rateFood():
     data = resetData(1)
     # print("should be None (no food on board)")
-    assert nearestFood(data) is None
+    assert rateFood(data) is None
 
     data = resetData(2)
     # print("should be (0,1)")
-    assert nearestFood(data) == (0, 1)
+    assert rateFood(data) == [((1, 5), 2), ((0, 1), 3), ((9, 9), 14)]
 
 
 def test_nextMove():
-    data = resetData(1)
+    data = resetData(2)
     # print("should return a single move")
     print("nextMove", nextMove(data))
 
@@ -104,4 +104,4 @@ if __name__ == "__main__":
     test_avoidEdges()
     test_nextMove()
     test_distance()
-    test_nearestFood()
+    test_rateFood()
