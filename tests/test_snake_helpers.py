@@ -4,42 +4,39 @@ from testing_tools import *
 
 def test_hitWall():
     data = resetData(1)
+    head = getHead(data)
 
     # print("should collide with wall, going up")
-    redefineYou(data, [(6, 0)])
-    assert hitWall(data, 'up') is True
+    assert hitWall(data, (6, 0), 'up') is True
 
     # print("should collide with wall, going left")
-    redefineYou(data, [(0, 3)])
-    assert hitWall(data, 'left') is True
+    assert hitWall(data, (0, 3), 'left') is True
 
     # print("should collide with wall, going right")
-    redefineYou(data, [(data['board']['width'], 3)])
-    assert hitWall(data, 'right') is True
+    assert hitWall(data, (14, 3), 'right') is True
 
     # print("should collide with wall, going down")
-    redefineYou(data, [(6, data['board']['height'])])
-    assert hitWall(data, 'down') is True
+    assert hitWall(data, (6, 14), 'down') is True
 
     # print("should not collide with wall, going up")
-    redefineYou(data, [(6, data['board']['height'])])
-    assert hitWall(data, 'up') is False
+    assert hitWall(data, (6, 14), 'up') is False
 
 
 def test_hitSnake():
     data = resetData(2)
+    head = getHead(data)
 
     # print("should not collide with snake, going right (tail)")
-    assert hitSnake(data, 'right') is False
+    assert hitSnake(data, head, 'right') is False
 
     # print("should collide with snake, going up")
-    assert hitSnake(data, 'up') is True
+    assert hitSnake(data, head, 'up') is True
 
     # print("should collide with SELF, going down")
-    assert hitSnake(data, 'down') is True
+    assert hitSnake(data, head, 'down') is True
 
     # print("should not collide with snake, going left (although off board)")
-    assert hitSnake(data, 'left') is False
+    assert hitSnake(data, head, 'left') is False
 
 
 def test_possibleMoves():
@@ -99,14 +96,16 @@ def test_nextMove():
     data = resetData(2)
     # print("should return a single move")
     # print("nextMove", nextMove(data))
-    assert not hitAny(data, nextMove(data))
+    assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(3)
     # print("nextMove", nextMove(data))
-    assert not hitAny(data, nextMove(data))
+    assert not hitAny(data, getHead(data), nextMove(data))
+    print("snakeMap", data['snakeMap'])
 
 
 if __name__ == "__main__":
+    test_nextMove()
     test_hitWall()
     test_hitSnake()
     test_possibleMoves()

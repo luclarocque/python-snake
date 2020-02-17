@@ -3,30 +3,30 @@ from scipy import spatial
 from coord_tools import *
 
 
-def hitWall(data, moveDirection):
-    w = data['board']['width']
-    h = data['board']['height']
+# TODO: check args of hitWall, hitSnake,
 
-    newHead = movedHead(data, moveDirection)
-    x = newHead[0]
-    y = newHead[1]
-    return not(0 <= x < w and 0 <= y < h)
-
-
-# Check for collision with another snake (minus tails)
-def hitSnake(data, moveDirection):
+def mapSnakes(data):
     snakeBodyPoints = {}
     for snake in data['board']['snakes']:
         for snakePoint in snake['body'][0:-1]:  # do not worry about hitting tail
             snakeBodyPoints[(snakePoint['x'], snakePoint['y'])] = True
-
-    # check if the movedHead is in already in snakeBodyPoints (collision)
-    newHead = movedHead(data, moveDirection)
-    return snakeBodyPoints.get(newHead, False)  # defaults to False if not found
+    return snakeBodyPoints
 
 
-def hitAny(data, moveDirection):
-    return hitWall(data, moveDirection) or hitSnake(data, moveDirection)
+def hitWall(data, point, moveDirection):
+    w, h = getWidthHeight(data)
+    point = movePoint(point, moveDirection)
+    return not withinBoard(point, w, h)
+
+
+# Check for collision with another snake (minus tails)
+def hitSnake(data, point, moveDirection):
+    point = movePoint(point, moveDirection)
+    return data['snakeMap'].get(point, False)  # defaults to False if not found
+
+
+def hitAny(data, point, moveDirection):
+    return hitWall(data, point, moveDirection) or hitSnake(data, point, moveDirection)
 
 
 # TODO: this assumes other snake does not move. Must look one step ahead for possible collision.
@@ -34,10 +34,12 @@ def hitAny(data, moveDirection):
 # def headOnWin(data, moveDirection):
 #     snakeHeads = {}  # key=(x,y) of head : value=len(snake)
 #     for snake in data['board']['snakes']:
-#         head = snake['body'][0]  # includes your own head, but movedHead is always different
-#         snakeHeads[(head['x'], head['y'])] = len(snake)
-#
-#     newHead = movedHead(data, moveDirection)
+#         if snake['id'] == data['you']['id']:
+#             continue  # skip adding your own head
+#         x, y = getHead(data)
+#         snakeHeads[(x, y)] = len(snake)
+#     head = getHead(data)
+#     newHead = movePoint(head, moveDirection)
 #
 #     # check if your head will collide with another head, and if you survive
 #     opponentLen = snakeHeads.get(newHead, 0)
@@ -47,9 +49,10 @@ def hitAny(data, moveDirection):
 
 def possibleMoves(data):
     moves = {'up', 'down', 'left', 'right'}
+    head = getHead(data)
     goodMoves = set()
     for mv in moves:
-        if not hitAny(data, mv):
+        if not hitAny(data, head, mv):
             goodMoves |= {mv}
     return goodMoves
 
@@ -58,12 +61,11 @@ def avoidEdges(data, edgeBuffer=1):
     """
     avoidEdges returns a set of moves whose distance to walls is >=edgeBuffer
     """
-    w = data['board']['width']
-    h = data['board']['height']
-
+    w, h = getWidthHeight(data)
     goodMoves = set()
     for mv in ['up', 'down', 'left', 'right']:
-        newHead = movedHead(data, mv)
+        head = getHead(data)
+        newHead = movePoint(head, mv)
         switchDistance = distHeadToWalls(newHead, w, h)
         dist = switchDistance[mv]
         if dist >= edgeBuffer:
@@ -79,7 +81,7 @@ def rateFood(data):
     Note: lower rating => better
     """
     # TODO: add more to cost, e.g., is it central? is it in a large zone?
-    head = dictToTuple(data['you']['body'][0])
+    head = getHead(data)
     listFood = listDictToTuple(data['board']['food'])
     if not listFood:
         return None
@@ -109,6 +111,44 @@ def goToFood(data, k=3):
     return foodMoves
 
 
+def flood(data, point):
+    w, h = getWidthHeight(data)
+
+    # accumulate coords in dictPoints
+    def floodHelper(data, point, dictPoints):
+        if not withinBoard(point, w, h):  # base case: point outside board
+            return dictPoints
+        elif dictPoints.get(point, False):  # base case: already visited
+            return dictPoints
+        elif data['snakeMap'].get(point, False):  # base case: point in snake
+            return dictPoints
+        dictPoints[point] = True
+        if not hitAny(data, point, 'up'):
+            floodHelper(data, movePoint(data, 'up'), dictPoints)
+        if not hitAny(data, point, 'down'):
+            floodHelper(data, movePoint(data, 'down'), dictPoints)
+        if not hitAny(data, point, 'left'):
+            floodHelper(data, movePoint(data, 'left'), dictPoints)
+        if not hitAny(data, point, 'right'):
+            floodHelper(data, movePoint(data, 'right'), dictPoints)
+
+    return floodHelper(data, point, {})
+
+
+
+def floodZones(data):
+    head = getHead(data)
+    w, h = getWidthHeight(data)
+
+    # def floodZonesHelper(data, point, zoneMap):
+    #     if not withinBoard(point, w, h):  # base case: point outside board
+    #         return zoneMap
+    #     if data['snakeMap'].get(point, False):  # base case: point in snake
+    #         return zoneMap
+    #
+    #     return floodZonesHelper()
+
+
 # TODO: create dictionary of possible moves {key='move': val=rating}
 #   increase score for moving toward food, avoiding edges, staying in
 #   large zones, etc.
@@ -120,6 +160,10 @@ def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
     """
+    # INITIALIZE NEW DATA KEYS HERE ------------------------------------------|
+    data['snakeMap'] = mapSnakes(data)
+    # ------------------------------------------------------------------------|
+
     health = data['you']['health']
     possMoves = possibleMoves(data)
     print("possMoves", possMoves)

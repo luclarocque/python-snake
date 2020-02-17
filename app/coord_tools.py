@@ -1,15 +1,25 @@
-def movedHead(data, moveDirection):
+def getWidthHeight(data):
+    w = data['board']['width']
+    h = data['board']['height']
+    return w, h
+
+
+def getHead(data):
+    return dictToTuple(data['you']['body'][0])
+
+
+def movePoint(point, moveDirection):
     """
-    movedHead returns a tuple (x,y) of the head after moving in moveDirection
+    movePoint returns a tuple (x,y) of the point after moving in moveDirection
     """
-    head = data['you']['body'][0]
-    switchHead = {
-        'up': (head['x'], head['y'] - 1),
-        'down': (head['x'], head['y'] + 1),
-        'left': (head['x'] - 1, head['y']),
-        'right': (head['x'] + 1, head['y'])
+    x, y = ensurePoint(point)
+    switchPoint = {
+        'up': (x, y - 1),
+        'down': (x, y + 1),
+        'left': (x - 1, y),
+        'right': (x + 1, y)
     }
-    return switchHead[moveDirection]
+    return switchPoint[moveDirection]
 
 
 def distance(a, b):
@@ -32,21 +42,25 @@ def listDictToTuple(listDicts):
     return [dictToTuple(d) for d in listDicts]
 
 
+def ensurePoint(d):
+    if not isinstance(d, tuple):
+        d = dictToTuple(d)
+    return d
+
+
+def withinBoard(point, w, h):
+    x, y = ensurePoint(point)
+    return 0 <= x < w and 0 <= y < h
+
+
 def distHeadToWalls(head, w, h):
     """
     distHeadToWalls returns a dict
         {key=direction : val=distance to wall in that direction}
-    head can be either data['you']['body'][0]   OR   a tuple (x,y)
+    head can be either getHead(data)   OR   a tuple (x,y)
     w, h are the board width and board height, respectively
     """
-    # get x and y coords of head
-    if isinstance(head, tuple):
-        x = head[0]
-        y = head[1]
-    else:
-        x = head['x']
-        y = head['y']
-
+    x, y = ensurePoint(head)
     switchDistance = dict(up=y, down=(h - 1) - y, left=x, right=(w - 1) - x)
     return switchDistance
 
@@ -55,7 +69,7 @@ def goToPoint(data, point):
     """
     goToPoint returns a set of moves that decrease the distance to the point
     """
-    head = dictToTuple(data['you']['body'][0])
+    head = getHead(data)
     moves = set()
     if point[0] > head[0]:
         moves |= {'right'}
