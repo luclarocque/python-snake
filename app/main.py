@@ -48,10 +48,10 @@ def start():
             request's data if necessary.
     """
     games[data['game']['id']] = data
-    print("*-"*5, 'START GAME', "-*"*5)
+    print "\n", "*-"*5, 'START GAME', "-*"*5, "\n"
     print(json.dumps(data))
 
-    color = "#22FFEE"
+    color = "#FC3EC5"
 
     return start_response(color)
 

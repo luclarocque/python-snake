@@ -94,34 +94,41 @@ def rateFood(data):
     return ratings
 
 
-# TODO: iterate through goToPoint() with all foods in output of rateFood().
-#  Assign weight based on inverse of cost (rating), and choose most strongly
-#  weighted direction as next move.
+def goToFood(data, k=3):
+    foodList = [tup[0] for tup in rateFood(data)]
+    # find moves that brings you closer to the nearest food
+    foodMoves = set()
+    for point in foodList[:1]:
+        foodMoves |= goToPoint(data, point)
+    # otherwise find moves that will approach any of nearest k foods
+    if not foodMoves:
+        print("can't go towards nearest food")
+        foodMoves = set()
+        for point in foodList[:k]:
+            foodMoves |= goToPoint(data, point)
+    return foodMoves
+
+
+# TODO: create dictionary of possible moves {key='move': val=rating}
+#   increase score for moving toward food, avoiding edges, staying in
+#   large zones, etc.
+def rateMoves(data, possMoves):
+    pass
+
+
 def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
     """
-    # health = data['you']['health']
+    health = data['you']['health']
     possMoves = possibleMoves(data)
     print("possMoves", possMoves)
 
-    foodList = [tup[0] for tup in rateFood(data)]
-    foodMoves = set(possMoves)  # copy the set of possMoves
-    # find a move that brings you closer to the nearest food
-    print(foodList[:1])
-    for point in foodList[:1]:
-        foodMoves &= goToPoint(data, point)  # intersect sets: common moves
-    print("moves toward nearest food", foodMoves)
-    # otherwise find moves that will approach any food
-    if not foodMoves:
-        print("can't go towards nearest food")
-        foodMoves = set()
-        for point in foodList:
-            foodMoves |= goToPoint(data, point)
-    subsetMoves = foodMoves & possMoves
-    print("possible foodMoves", subsetMoves)
-    # else:
-    #     subsetMoves = avoidEdges(data, possMoves, edgeBuffer=2)
+    if health < 80:
+        subsetMoves = goToFood(data)
+    else:
+        subsetMoves = avoidEdges(data, edgeBuffer=2)
+    subsetMoves &= possMoves
     if not subsetMoves:
         subsetMoves = possMoves
     move = random.choice(list(subsetMoves))

@@ -53,7 +53,7 @@ def distHeadToWalls(head, w, h):
 
 def goToPoint(data, point):
     """
-    goToPoint returns a set of moves that decreases the distance to the point
+    goToPoint returns a set of moves that decrease the distance to the point
     """
     head = dictToTuple(data['you']['body'][0])
     moves = set()

@@ -1,0 +1,189 @@
+{
+  "Turn": 147,
+  "Food": [
+    {
+      "X": 6,
+      "Y": 10
+    },
+    {
+      "X": 8,
+      "Y": 8
+    }
+  ],
+  "Snakes": [
+    {
+      "ID": "gs_JFj4RY8pY7gcb7dP8GygjGTH",
+      "Name": "kabby174 / Mambakko",
+      "URL": "",
+      "Body": [
+        {
+          "X": 9,
+          "Y": 10
+        },
+        {
+          "X": 9,
+          "Y": 9
+        },
+        {
+          "X": 9,
+          "Y": 8
+        },
+        {
+          "X": 10,
+          "Y": 8
+        },
+        {
+          "X": 10,
+          "Y": 7
+        },
+        {
+          "X": 10,
+          "Y": 6
+        },
+        {
+          "X": 10,
+          "Y": 5
+        },
+        {
+          "X": 10,
+          "Y": 4
+        },
+        {
+          "X": 10,
+          "Y": 3
+        }
+      ],
+      "Health": 98,
+      "Death": null,
+      "Color": "#6E54FE",
+      "HeadType": "bendr",
+      "TailType": "freckled",
+      "Latency": ""
+    },
+    {
+      "ID": "gs_CJRjq3M6hrrVSxQxFWcMmD6b",
+      "Name": "lucwashere / Slython",
+      "URL": "",
+      "Body": [
+        {
+          "X": 7,
+          "Y": 10
+        },
+        {
+          "X": 7,
+          "Y": 9
+        },
+        {
+          "X": 7,
+          "Y": 8
+        },
+        {
+          "X": 6,
+          "Y": 8
+        },
+        {
+          "X": 6,
+          "Y": 9
+        },
+        {
+          "X": 5,
+          "Y": 9
+        },
+        {
+          "X": 5,
+          "Y": 10
+        },
+        {
+          "X": 4,
+          "Y": 10
+        },
+        {
+          "X": 4,
+          "Y": 9
+        },
+        {
+          "X": 4,
+          "Y": 8
+        },
+        {
+          "X": 4,
+          "Y": 7
+        },
+        {
+          "X": 3,
+          "Y": 7
+        },
+        {
+          "X": 3,
+          "Y": 6
+        },
+        {
+          "X": 3,
+          "Y": 5
+        },
+        {
+          "X": 3,
+          "Y": 4
+        },
+        {
+          "X": 4,
+          "Y": 4
+        },
+        {
+          "X": 4,
+          "Y": 5
+        },
+        {
+          "X": 5,
+          "Y": 5
+        },
+        {
+          "X": 5,
+          "Y": 4
+        }
+      ],
+      "Health": 95,
+      "Death": null,
+      "Color": "#22FFEE",
+      "HeadType": "",
+      "TailType": "",
+      "Latency": ""
+    },
+    {
+      "ID": "gs_tC4Q6CdMxTfppJxg38MTqbCJ",
+      "Name": "cstafie / DestructoSnek9000",
+      "URL": "",
+      "Body": [
+        {
+          "X": 0,
+          "Y": 11
+        },
+        {
+          "X": 0,
+          "Y": 10
+        },
+        {
+          "X": 0,
+          "Y": 9
+        },
+        {
+          "X": 1,
+          "Y": 9
+        },
+        {
+          "X": 1,
+          "Y": 10
+        }
+      ],
+      "Health": 99,
+      "Death": {
+        "Cause": "wall-collision",
+        "Turn": 71
+      },
+      "Color": "#5C007A",
+      "HeadType": "smile",
+      "TailType": "block-bum",
+      "Latency": ""
+    }
+  ]
+}

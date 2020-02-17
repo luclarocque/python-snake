@@ -89,14 +89,20 @@ def test_rateFood():
     assert rateFood(data) == [((1, 5), 2), ((0, 1), 3), ((9, 9), 14)]
 
 
+def test_goToFood():
+    data = resetData(3)
+    print("should return {up, right} despite right being impossible: hit self")
+    assert goToFood(data) == {'up', 'right'}
+
+
 def test_nextMove():
     data = resetData(2)
     # print("should return a single move")
-    print("nextMove", nextMove(data))
+    # print("nextMove", nextMove(data))
     assert not hitAny(data, nextMove(data))
 
     data = resetData(3)
-    print("nextMove", nextMove(data))
+    # print("nextMove", nextMove(data))
     assert not hitAny(data, nextMove(data))
 
 
