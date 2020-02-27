@@ -79,17 +79,28 @@ def test_distance():
 def test_rateFood():
     data = resetData(1)
     # print("should be None (no food on board)")
-    assert rateFood(data) is None
+    assert getFoodDistList(data) is None
 
     data = resetData(2)
     # print("should return ordered list with nearest food first")
-    assert rateFood(data) == [((1, 5), 2), ((0, 1), 3), ((9, 9), 14)]
+    assert getFoodDistList(data) == [((1, 5), 2), ((0, 1), 3), ((9, 9), 14)]
 
 
 def test_goToFood():
     data = resetData(3)
     print("should return {up, right} despite right being impossible: hit self")
     assert goToFood(data) == {'up', 'right'}
+
+
+def test_getFloodSizeList():
+    data = resetData(4)
+    # print("should only have non-zero size for left and right")
+    floodSizeList = getFloodSizeList(data)
+    print("floodSizeList", floodSizeList)
+    assert floodSizeList == [('right', 89),
+                             ('left', 1),
+                             ('up', 0),
+                             ('down', 0)]
 
 
 def test_nextMove():
@@ -114,3 +125,4 @@ if __name__ == "__main__":
     test_nextMove()
     test_distance()
     test_rateFood()
+    test_getFloodSizeList()

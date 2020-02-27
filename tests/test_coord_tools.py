@@ -26,7 +26,15 @@ def test_goToPoint():
     assert goToPoint(data, (9, 9)) == {'down', 'right'}
 
 
+def test_movePoint():
+    assert movePoint((0, 0), 'left') == (-1, 0)
+    assert movePoint((0, 0), 'right') == (1, 0)
+    assert movePoint((0, 0), 'up') == (0, -1)
+    assert movePoint((0, 0), 'down') == (0, 1)
+
+
 if __name__ == "__main__":
     test_dictToTuple()
     test_listDictToTuple()
     test_goToPoint()
+    test_movePoint()

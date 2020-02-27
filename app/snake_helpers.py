@@ -2,8 +2,8 @@ import random
 from scipy import spatial
 from coord_tools import *
 
+directions = ('up', 'down', 'left', 'right')
 
-# TODO: check args of hitWall, hitSnake,
 
 def mapSnakes(data):
     snakeBodyPoints = {}
@@ -73,14 +73,12 @@ def avoidEdges(data, edgeBuffer=1):
     return goodMoves
 
 
-def rateFood(data):
+def getFoodDistList(data):
     """
-    rateFood returns None (no food) or a list of tuples ((x, y), cost)
-        where (x,y) are the coords of the food, and
-        cost is determined by distance (and other metrics???)
+    getFoodDistList returns None (no food) or a list of tuples ((x, y), dist)
+        where (x,y) are the coords of the food, and dist is distance
     Note: lower rating => better
     """
-    # TODO: add more to cost, e.g., is it central? is it in a large zone?
     head = getHead(data)
     listFood = listDictToTuple(data['board']['food'])
     if not listFood:
@@ -91,15 +89,22 @@ def rateFood(data):
         distances = [distances]
         indices = [indices]
     distances = map(int, distances)
-    ratings = [(listFood[indices[i]], distances[i]) for i in range(len(distances))]
-    print(ratings)
-    return ratings
+    foodDistList = [(listFood[indices[i]], distances[i]) for i in range(len(distances))]
+    print(foodDistList)
+    return foodDistList
 
 
 def goToFood(data, k=3):
-    foodList = [tup[0] for tup in rateFood(data)]
-    # find moves that brings you closer to the nearest food
+    """
+    goToFood returns a set of moves that bring you closer to either
+        the nearest food to your head, or one of k nearest foods.
+    """
+    foodDistList = getFoodDistList(data)
     foodMoves = set()
+    if not foodDistList:
+        return foodMoves
+    foodList = [tup[0] for tup in foodDistList]  # list of food coords
+    # find moves that brings you closer to the nearest food
     for point in foodList[:1]:
         foodMoves |= goToPoint(data, point)
     # otherwise find moves that will approach any of nearest k foods
@@ -114,39 +119,39 @@ def goToFood(data, k=3):
 def flood(data, point):
     w, h = getWidthHeight(data)
 
-    # accumulate coords in dictPoints
-    def floodHelper(data, point, dictPoints):
-        if not withinBoard(point, w, h):  # base case: point outside board
-            return dictPoints
-        elif dictPoints.get(point, False):  # base case: already visited
-            return dictPoints
-        elif data['snakeMap'].get(point, False):  # base case: point in snake
-            return dictPoints
-        dictPoints[point] = True
-        if not hitAny(data, point, 'up'):
-            floodHelper(data, movePoint(data, 'up'), dictPoints)
-        if not hitAny(data, point, 'down'):
-            floodHelper(data, movePoint(data, 'down'), dictPoints)
-        if not hitAny(data, point, 'left'):
-            floodHelper(data, movePoint(data, 'left'), dictPoints)
-        if not hitAny(data, point, 'right'):
-            floodHelper(data, movePoint(data, 'right'), dictPoints)
+    # accumulate coords of empty spaces(+tails) in dictPoints
+    dictPoints = {}
 
-    return floodHelper(data, point, {})
+    def floodHelper(curPoint):
+        if not withinBoard(curPoint, w, h):  # base case: wall / outside board
+            return
+        elif dictPoints.get(curPoint, False):  # base case: already visited
+            return
+        elif data['snakeMap'].get(curPoint, False):  # base case: point in snake
+            return
+
+        dictPoints[curPoint] = True  # otherwise add current point to flood set
+        for d in directions:
+            floodHelper(movePoint(curPoint, d))
+
+    floodHelper(point)  # run once to populate dictPoints
+    return dictPoints
 
 
-
-def floodZones(data):
+def getFloodSizeList(data):
+    """
+    getFloodSizeList returns a list of tuples (move, size)
+        where move is a direction (str),
+        size is the flood size if the head were to move in that direction
+    Note: flooding always happens from the perspective of the head
+    """
     head = getHead(data)
-    w, h = getWidthHeight(data)
-
-    # def floodZonesHelper(data, point, zoneMap):
-    #     if not withinBoard(point, w, h):  # base case: point outside board
-    #         return zoneMap
-    #     if data['snakeMap'].get(point, False):  # base case: point in snake
-    #         return zoneMap
-    #
-    #     return floodZonesHelper()
+    floodSizeList = []
+    for d in directions:
+        floodSet = flood(data, movePoint(head, d))
+        floodSizeList.append((d, len(floodSet)))
+    # sort in order of descending flood size
+    return sorted(floodSizeList, key=lambda x: x[1], reverse=True)
 
 
 # TODO: create dictionary of possible moves {key='move': val=rating}
@@ -162,19 +167,30 @@ def nextMove(data):
     """
     # INITIALIZE NEW DATA KEYS HERE ------------------------------------------|
     data['snakeMap'] = mapSnakes(data)
+    data['floodSizeList'] = getFloodSizeList(data)
+    data['foodDistList'] = getFoodDistList(data)
     # ------------------------------------------------------------------------|
 
     health = data['you']['health']
+    myLength = len(data['you']['body'])
+
     possMoves = possibleMoves(data)
     print("possMoves", possMoves)
 
-    if health < 80:
-        subsetMoves = goToFood(data)
-    else:
-        subsetMoves = avoidEdges(data, edgeBuffer=2)
-    subsetMoves &= possMoves
-    if not subsetMoves:
-        subsetMoves = possMoves
-    move = random.choice(list(subsetMoves))
-    print("final moveSet", subsetMoves)
-    return move
+    # set of moves that bring you closer to food
+    foodMoves = goToFood(data)
+    print("foodMoves", foodMoves)
+
+    # set of moves that lead to open space, in descending order
+    highFloodMoves = list(map(lambda y: y[0],  # the move is at index 0
+                              filter(lambda x: x[1] > 0, data['floodSizeList'])))
+    print("highFloodMoves", highFloodMoves)
+
+    # Moves in highFloodMoves must be possible
+    #   Choose the first move that leads to food as well
+    for mv in highFloodMoves:
+        if mv in foodMoves:
+            return mv
+
+    # If no highFloodMoves head toward food, go in highest flood direction
+    return highFloodMoves[0]
