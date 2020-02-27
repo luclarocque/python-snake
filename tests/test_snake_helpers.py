@@ -89,7 +89,7 @@ def test_rateFood():
 def test_goToFood():
     data = resetData(3)
     print("should return {up, right} despite right being impossible: hit self")
-    assert goToFood(data) == {'up', 'right'}
+    assert getFoodMoves(data) == {'up', 'right'}
 
 
 def test_getFloodSizeList():

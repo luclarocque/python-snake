@@ -94,9 +94,9 @@ def getFoodDistList(data):
     return foodDistList
 
 
-def goToFood(data, k=3):
+def getFoodMoves(data, k=3):
     """
-    goToFood returns a set of moves that bring you closer to either
+    getFoodMoves returns a set of moves that bring you closer to either
         the nearest food to your head, or one of k nearest foods.
     """
     foodDistList = getFoodDistList(data)
@@ -178,19 +178,19 @@ def nextMove(data):
     print("possMoves", possMoves)
 
     # set of moves that bring you closer to food
-    foodMoves = goToFood(data)
+    foodMoves = getFoodMoves(data)
     print("foodMoves", foodMoves)
 
-    # set of moves that lead to open space, in descending order
-    highFloodMoves = list(map(lambda y: y[0],  # the move is at index 0
-                              filter(lambda x: x[1] > 0, data['floodSizeList'])))
+    # list of (move, size) that lead to open space, in descending order
+    highFloodMoves = list(filter(lambda x: x[1] > 0, data['floodSizeList']))
     print("highFloodMoves", highFloodMoves)
 
     # Moves in highFloodMoves must be possible
     #   Choose the first move that leads to food as well
-    for mv in highFloodMoves:
-        if mv in foodMoves:
+    for mv, size in highFloodMoves:
+        if mv in foodMoves and size > myLength/2:
             return mv
 
-    # If no highFloodMoves head toward food, go in highest flood direction
-    return highFloodMoves[0]
+    # If no highFloodMoves head toward food (or size too small),
+    #   go in highest flood direction
+    return highFloodMoves[0][0]
