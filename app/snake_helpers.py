@@ -1,4 +1,3 @@
-import random
 from scipy import spatial
 from coord_tools import *
 
@@ -27,24 +26,6 @@ def hitSnake(data, point, moveDirection):
 
 def hitAny(data, point, moveDirection):
     return hitWall(data, point, moveDirection) or hitSnake(data, point, moveDirection)
-
-
-# TODO: this assumes other snake does not move. Must look one step ahead for possible collision.
-# Assuming hitSnake, check if head-on collision AND if you are longer
-# def headOnWin(data, moveDirection):
-#     snakeHeads = {}  # key=(x,y) of head : value=len(snake)
-#     for snake in data['board']['snakes']:
-#         if snake['id'] == data['you']['id']:
-#             continue  # skip adding your own head
-#         x, y = getHead(data)
-#         snakeHeads[(x, y)] = len(snake)
-#     head = getHead(data)
-#     newHead = movePoint(head, moveDirection)
-#
-#     # check if your head will collide with another head, and if you survive
-#     opponentLen = snakeHeads.get(newHead, 0)
-#     yourLen = len(data['you']['body'])
-#     return yourLen > opponentLen
 
 
 def possibleMoves(data):
@@ -77,7 +58,6 @@ def getFoodDistList(data):
     """
     getFoodDistList returns None (no food) or a list of tuples ((x, y), dist)
         where (x,y) are the coords of the food, and dist is distance
-    Note: lower rating => better
     """
     head = getHead(data)
     listFood = listDictToTuple(data['board']['food'])
@@ -98,6 +78,7 @@ def getFoodMoves(data, k=3):
     """
     getFoodMoves returns a set of moves that bring you closer to either
         the nearest food to your head, or one of k nearest foods.
+    NOTE: Only returns moves that do not result in direct collision
     """
     foodDistList = getFoodDistList(data)
     foodMoves = set()
@@ -110,13 +91,18 @@ def getFoodMoves(data, k=3):
     # otherwise find moves that will approach any of nearest k foods
     if not foodMoves:
         print("can't go towards nearest food")
-        foodMoves = set()
-        for point in foodList[:k]:
+        # foodMoves = set()
+        for point in foodList[1:k]:
             foodMoves |= goToPoint(data, point)
-    return foodMoves
+    possMoves = possibleMoves(data)
+    return foodMoves & possMoves
 
 
-def flood(data, point):
+def flood(data, point, snakeMap):
+    """
+    flood returns a dictionary of vacant coords (incl. tails) in the zone
+        that includes the given input point.
+    """
     w, h = getWidthHeight(data)
 
     # accumulate coords of empty spaces(+tails) in dictPoints
@@ -127,7 +113,7 @@ def flood(data, point):
             return
         elif dictPoints.get(curPoint, False):  # base case: already visited
             return
-        elif data['snakeMap'].get(curPoint, False):  # base case: point in snake
+        elif snakeMap.get(curPoint, False):  # base case: point in snake
             return
 
         dictPoints[curPoint] = True  # otherwise add current point to flood set
@@ -138,7 +124,7 @@ def flood(data, point):
     return dictPoints
 
 
-def getFloodSizeList(data):
+def getFloodSizeList(data, snakeMap):
     """
     getFloodSizeList returns a list of tuples (move, size)
         where move is a direction (str),
@@ -148,10 +134,45 @@ def getFloodSizeList(data):
     head = getHead(data)
     floodSizeList = []
     for d in directions:
-        floodSet = flood(data, movePoint(head, d))
+        floodSet = flood(data, movePoint(head, d), snakeMap)
         floodSizeList.append((d, len(floodSet)))
     # sort in order of descending flood size
     return sorted(floodSizeList, key=lambda x: x[1], reverse=True)
+
+
+def getHeadMap(data):
+    """
+    getHeadMap returns a dict:
+        key=(x,y) of opponent snakeHeads : value=len(snake)
+    """
+    snakeHeads = {}  # key=(x,y) of head : value=len(snake)
+    for snake in data['board']['snakes']:
+        if snake['id'] == data['you']['id']:
+            continue  # skip adding your own head
+        opponentHead = snake['body'][0]
+        for d in directions:
+            possibleHead = movePoint(opponentHead, d)
+            snakeHeads[possibleHead] = len(snake)
+    return snakeHeads
+
+
+def avoidHeadMoves(data, headMap):
+    """
+    avoidHeadMoves returns set of moves that cannot result in losing
+        head-on collision.
+    NOTE: Only returns moves that do not result in direct collision
+    """
+    myLength = len(data['you']['body'])
+    head = getHead(data)
+
+    moves = set()
+    for d in directions:
+        movedHead = movePoint(head, d)
+        opponentLength = headMap.get(movedHead, False)
+        if not opponentLength or myLength > opponentLength:
+            moves |= {d}
+    possMoves = possibleMoves(data)
+    return moves & possMoves
 
 
 # TODO: create dictionary of possible moves {key='move': val=rating}
@@ -167,30 +188,51 @@ def nextMove(data):
     """
     # INITIALIZE NEW DATA KEYS HERE ------------------------------------------|
     data['snakeMap'] = mapSnakes(data)
-    data['floodSizeList'] = getFloodSizeList(data)
+    data['floodSizeList'] = getFloodSizeList(data, data['snakeMap'])
     data['foodDistList'] = getFoodDistList(data)
+    data['headMap'] = getHeadMap(data)
     # ------------------------------------------------------------------------|
 
     health = data['you']['health']
     myLength = len(data['you']['body'])
 
-    possMoves = possibleMoves(data)
-    print("possMoves", possMoves)
-
     # set of moves that bring you closer to food
     foodMoves = getFoodMoves(data)
     print("foodMoves", foodMoves)
 
+    # set of moves that avoid heads of larger snakes
+    # TODO: actively target heads of smaller snakes?
+    headMoves = avoidHeadMoves(data, data['headMap'])
+    print("headMoves", headMoves)
+
     # list of (move, size) that lead to open space, in descending order
-    highFloodMoves = list(filter(lambda x: x[1] > 0, data['floodSizeList']))
+    highFloodMovesSizes = list(filter(lambda x: x[1] > 0, data['floodSizeList']))
+    print("highFloodMovesSizes", highFloodMovesSizes)
+
+    # list of moves only from highFloodMovesSizes
+    highFloodMoves = [tup[0] for tup in highFloodMovesSizes]
     print("highFloodMoves", highFloodMoves)
 
-    # Moves in highFloodMoves must be possible
-    #   Choose the first move that leads to food as well
-    for mv, size in highFloodMoves:
-        if mv in foodMoves and size > myLength/2:
-            return mv
+    # # Moves in highFloodMovesSizes must be possible
+    # #   Choose the first move that leads to food as well
+    # for mv, size in highFloodMovesSizes:
+    #     if mv in foodMoves and size > myLength/2:
+    #         return mv
 
-    # If no highFloodMoves head toward food (or size too small),
-    #   go in highest flood direction
-    return highFloodMoves[0][0]
+    # TODO: must find a way to balance priorities.
+    #   - Food is lowest priority, but increases (exponentially?) with decreasing health
+    #   - headMoves is high priority, but it is conservative: moves not in this set are not
+    #       guaranteed to result in death, but death is not unlikely
+    #   - highFloodMovesSizes with large size are high priority
+
+    # Moves in highFloodMovesSizes will not directly collide
+    #   (but may collide with another head).
+    # Choose the first move that does not risk colliding with head
+    #   of a larger snake, and leads to food if health is low.
+    for mv, size in highFloodMovesSizes:
+        if mv in headMoves:
+            if mv in foodMoves or (health > 40):
+                return mv
+
+    # Otherwise go in highest flood-zone-size direction
+    return highFloodMoves[0]

@@ -95,12 +95,20 @@ def test_goToFood():
 def test_getFloodSizeList():
     data = resetData(4)
     # print("should only have non-zero size for left and right")
-    floodSizeList = getFloodSizeList(data)
+    snakeMap = mapSnakes(data)
+    floodSizeList = getFloodSizeList(data, snakeMap)
     print("floodSizeList", floodSizeList)
     assert floodSizeList == [('right', 89),
                              ('left', 1),
                              ('up', 0),
                              ('down', 0)]
+
+
+def test_avoidHeadMoves():
+    data = resetData(4)
+    # print("")
+    headMap = getHeadMap(data)
+    assert avoidHeadMoves(data, headMap) == {'left', 'right'}
 
 
 def test_nextMove():
@@ -112,7 +120,6 @@ def test_nextMove():
     data = resetData(3)
     # print("nextMove", nextMove(data))
     assert not hitAny(data, getHead(data), nextMove(data))
-    print("snakeMap", data['snakeMap'])
 
 
 if __name__ == "__main__":
@@ -126,3 +133,4 @@ if __name__ == "__main__":
     test_distance()
     test_rateFood()
     test_getFloodSizeList()
+    test_avoidHeadMoves()
