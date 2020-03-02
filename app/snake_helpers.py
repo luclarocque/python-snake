@@ -231,7 +231,7 @@ def nextMove(data):
     #   of a larger snake, and leads to food if health is low.
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
-            if mv in foodMoves or (health > 40):
+            if mv in foodMoves or (health > 95):
                 return mv
 
     # Otherwise go in highest flood-zone-size direction
