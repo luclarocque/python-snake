@@ -156,6 +156,7 @@ def getHeadMap(data):
     return snakeHeads
 
 
+# TODO: perhaps return max 2 possible moves if we can kill a smaller snake
 def avoidHeadMoves(data, headMap):
     """
     avoidHeadMoves returns set of moves that cannot result in losing
@@ -213,8 +214,8 @@ def nextMove(data):
     highFloodMoves = [tup[0] for tup in highFloodMovesSizes]
     print("highFloodMoves", highFloodMoves)
 
-    # # Moves in highFloodMovesSizes must be possible
-    # #   Choose the first move that leads to food as well
+    # Moves in highFloodMovesSizes must be possible
+    #   Choose the first move that leads to food as well
     # for mv, size in highFloodMovesSizes:
     #     if mv in foodMoves and size > myLength/2:
     #         return mv
@@ -224,15 +225,15 @@ def nextMove(data):
     #   - headMoves is high priority, but it is conservative: moves not in this set are not
     #       guaranteed to result in death, but death is not unlikely
     #   - highFloodMovesSizes with large size are high priority
-
-    # Moves in highFloodMovesSizes will not directly collide
-    #   (but may collide with another head).
-    # Choose the first move that does not risk colliding with head
-    #   of a larger snake, and leads to food if health is low.
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
-            if mv in foodMoves or (health > 95):
+            if mv in foodMoves and size > myLength/2:
                 return mv
 
-    # Otherwise go in highest flood-zone-size direction
-    return highFloodMoves[0]
+    # If chasing food is not possible settle for avoiding heads in large zones
+    if highFloodMoves[0] in headMoves:
+        return highFloodMoves[0]
+    elif highFloodMovesSizes[1][1] > myLength/2 and highFloodMoves[1] in headMoves:
+        return highFloodMoves[1]
+    else:
+        return highFloodMoves[0]
