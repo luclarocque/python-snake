@@ -1,0 +1,219 @@
+{
+  "game": {
+    "id": "id00000000"
+  },
+  "turn": 62,
+  "board": {
+    "height": 11,
+    "width": 11,
+    "food": [
+      {
+        "x": 10,
+        "y": 3
+      }
+    ],
+    "snakes": [
+      {
+        "id": "gs_ffy8y3grhyjpb83byvcswq4s",
+        "name": "kabby174 / mambakko",
+        "url": "",
+        "body": [
+          {
+            "x": 6,
+            "y": 0
+          },
+          {
+            "x": 5,
+            "y": 0
+          },
+          {
+            "x": 4,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 0
+          },
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 2
+          }
+        ],
+        "health": 87,
+        "death": null,
+        "color": "#5490fe",
+        "headtype": "bendr",
+        "tailtype": "freckled",
+        "latency": "86",
+        "shout": ""
+      },
+      {
+        "id": "gs_v3pcvw78xkyxym69mkkby4vj",
+        "name": "cstafie / destructosnek9000",
+        "url": "",
+        "body": [
+          {
+            "x": 6,
+            "y": 8
+          },
+          {
+            "x": 6,
+            "y": 9
+          },
+          {
+            "x": 7,
+            "y": 9
+          },
+          {
+            "x": 8,
+            "y": 9
+          },
+          {
+            "x": 9,
+            "y": 9
+          },
+          {
+            "x": 9,
+            "y": 8
+          },
+          {
+            "x": 9,
+            "y": 7
+          },
+          {
+            "x": 9,
+            "y": 6
+          },
+          {
+            "x": 8,
+            "y": 6
+          },
+          {
+            "x": 8,
+            "y": 5
+          },
+          {
+            "x": 7,
+            "y": 5
+          },
+          {
+            "x": 7,
+            "y": 6
+          }
+        ],
+        "health": 99,
+        "death": null,
+        "color": "#5c007a",
+        "headtype": "smile",
+        "tailtype": "block-bum",
+        "latency": "147",
+        "shout": ""
+      },
+      {
+        "id": "gs_h36q9bkgmjjpm6rqw6tm63gv",
+        "name": "lucwashere / slython",
+        "url": "",
+        "body": [
+          {
+            "x": 5,
+            "y": 9
+          },
+          {
+            "x": 4,
+            "y": 9
+          },
+          {
+            "x": 3,
+            "y": 9
+          },
+          {
+            "x": 2,
+            "y": 9
+          },
+          {
+            "x": 1,
+            "y": 9
+          },
+          {
+            "x": 1,
+            "y": 8
+          },
+          {
+            "x": 1,
+            "y": 7
+          },
+          {
+            "x": 1,
+            "y": 6
+          },
+          {
+            "x": 1,
+            "y": 5
+          }
+        ],
+        "health": 94,
+        "death": null,
+        "color": "#fc3ec5",
+        "headtype": "safe",
+        "tailtype": "freckled",
+        "latency": "86",
+        "shout": ""
+      }
+    ]
+  },
+  "you": {
+    "id": "gs_h36q9bkgmjjpm6rqw6tm63gv",
+    "name": "lucwashere / slython",
+    "url": "",
+    "body": [
+      {
+        "x": 5,
+        "y": 9
+      },
+      {
+        "x": 4,
+        "y": 9
+      },
+      {
+        "x": 3,
+        "y": 9
+      },
+      {
+        "x": 2,
+        "y": 9
+      },
+      {
+        "x": 1,
+        "y": 9
+      },
+      {
+        "x": 1,
+        "y": 8
+      },
+      {
+        "x": 1,
+        "y": 7
+      },
+      {
+        "x": 1,
+        "y": 6
+      },
+      {
+        "x": 1,
+        "y": 5
+      }
+    ],
+    "health": 94,
+    "death": null,
+    "color": "#fc3ec5",
+    "headtype": "safe",
+    "tailtype": "freckled",
+    "latency": "86",
+    "shout": ""
+  }
+}
+

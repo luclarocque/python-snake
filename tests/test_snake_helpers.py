@@ -106,23 +106,28 @@ def test_getFloodSizeList():
 
 def test_avoidHeadMoves():
     data = resetData(4)
-    # print("")
+    # print("only head nearby is of smaller snake, so target by going right")
     headMap = getHeadMap(data)
-    assert avoidHeadMoves(data, headMap) == {'left', 'right'}
+    assert avoidHeadMoves(data, headMap) == {'right'}
+
+    data = resetData(5)
+    # print("nearby snake is larger, so must go down to avoid head")
+    headMap = getHeadMap(data)
+    assert avoidHeadMoves(data, headMap) == {'down'}
 
 
 def test_nextMove():
     data = resetData(2)
     # print("should return a single move")
-    # print("nextMove", nextMove(data))
     assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(3)
-    # print("nextMove", nextMove(data))
     assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(4)
-    # print("nextMove", nextMove(data))
+    assert not hitAny(data, getHead(data), nextMove(data))
+
+    data = resetData(5)
     assert not hitAny(data, getHead(data), nextMove(data))
 
 

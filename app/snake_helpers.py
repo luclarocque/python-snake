@@ -220,7 +220,7 @@ def nextMove(data):
 
     # list of moves only from highFloodMovesSizes
     highFloodMoves = [tup[0] for tup in highFloodMovesSizes]
-    print("highFloodMoves", highFloodMoves)
+    # print("highFloodMoves", highFloodMoves)
 
     # Moves in highFloodMovesSizes must be possible
     #   Choose the first move that leads to food as well
@@ -236,12 +236,16 @@ def nextMove(data):
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
             if mv in foodMoves and size > myLength/2:
+                print ('CHOSEN MOVE:', mv)
                 return mv
 
     # If chasing food is not possible settle for avoiding heads in large zones
     if highFloodMoves[0] in headMoves:
-        return highFloodMoves[0]
+        mv = highFloodMoves[0]
     elif highFloodMovesSizes[1][1] > myLength/2 and highFloodMoves[1] in headMoves:
-        return highFloodMoves[1]
+        mv = highFloodMoves[1]
     else:
-        return highFloodMoves[0]
+        mv = highFloodMoves[0]
+
+    print ('CHOSEN MOVE:', mv)
+    return mv
