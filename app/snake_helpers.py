@@ -244,12 +244,11 @@ def nextMove(data):
                 return mv
 
     # If chasing food is not possible settle for avoiding heads in large zones
-    if highFloodMoves[0] in headMoves:
-        mv = highFloodMoves[0]
-    elif highFloodMovesSizes[1][1] > myLength/2 and highFloodMoves[1] in headMoves:
-        mv = highFloodMoves[1]
-    else:
-        mv = highFloodMoves[0]
+    for mv, size in highFloodMovesSizes:
+        if mv in headMoves:
+            print ("CHOSEN MOVE", mv)
+            return mv
 
+    mv = highFloodMoves[0]
     print ("CHOSEN MOVE", mv)
     return mv
