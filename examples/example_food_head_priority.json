@@ -1,0 +1,316 @@
+{
+  "Turn": 112,
+  "Food": [
+    {
+      "X": 10,
+      "Y": 7
+    },
+    {
+      "X": 6,
+      "Y": 9
+    }
+  ],
+  "Snakes": [
+    {
+      "ID": "gs_PjkYxQvXmFQ9dhGfXT8Cc4G7",
+      "Name": "jerrykott / Medusa Returns",
+      "URL": "",
+      "Body": [
+        {
+          "X": 6,
+          "Y": 8
+        },
+        {
+          "X": 7,
+          "Y": 8
+        },
+        {
+          "X": 8,
+          "Y": 8
+        },
+        {
+          "X": 8,
+          "Y": 7
+        },
+        {
+          "X": 8,
+          "Y": 6
+        },
+        {
+          "X": 8,
+          "Y": 5
+        },
+        {
+          "X": 8,
+          "Y": 4
+        },
+        {
+          "X": 7,
+          "Y": 4
+        },
+        {
+          "X": 7,
+          "Y": 3
+        },
+        {
+          "X": 6,
+          "Y": 3
+        },
+        {
+          "X": 6,
+          "Y": 2
+        },
+        {
+          "X": 5,
+          "Y": 2
+        },
+        {
+          "X": 4,
+          "Y": 2
+        },
+        {
+          "X": 3,
+          "Y": 2
+        },
+        {
+          "X": 3,
+          "Y": 3
+        },
+        {
+          "X": 3,
+          "Y": 4
+        }
+      ],
+      "Health": 84,
+      "Death": null,
+      "Color": "#CFB53B",
+      "HeadType": "tongue",
+      "TailType": "curled",
+      "Latency": "97",
+      "Shout": ""
+    },
+    {
+      "ID": "gs_KXFKk6HmmyVqg9Sx9tkPcVH6",
+      "Name": "ivanskodje / WhaleSnek",
+      "URL": "",
+      "Body": [
+        {
+          "X": 10,
+          "Y": 10
+        },
+        {
+          "X": 10,
+          "Y": 9
+        },
+        {
+          "X": 9,
+          "Y": 9
+        },
+        {
+          "X": 8,
+          "Y": 9
+        },
+        {
+          "X": 7,
+          "Y": 9
+        },
+        {
+          "X": 6,
+          "Y": 9
+        },
+        {
+          "X": 6,
+          "Y": 8
+        }
+      ],
+      "Health": 82,
+      "Death": {
+        "Cause": "head-collision",
+        "Turn": 80
+      },
+      "Color": "#0000ff",
+      "HeadType": "safe",
+      "TailType": "hook",
+      "Latency": "308",
+      "Shout": ""
+    },
+    {
+      "ID": "gs_pyfpv37BjG6W94RjgYkBCCXG",
+      "Name": "charlbury / DoMore",
+      "URL": "",
+      "Body": [
+        {
+          "X": 9,
+          "Y": -1
+        },
+        {
+          "X": 9,
+          "Y": 0
+        },
+        {
+          "X": 9,
+          "Y": 1
+        },
+        {
+          "X": 9,
+          "Y": 2
+        }
+      ],
+      "Health": 97,
+      "Death": {
+        "Cause": "wall-collision",
+        "Turn": 6
+      },
+      "Color": "#cdcb1e",
+      "HeadType": "",
+      "TailType": "",
+      "Latency": "0",
+      "Shout": ""
+    },
+    {
+      "ID": "gs_yqSrmFCHwFX6633CW4MhxwFB",
+      "Name": "cstafie / DestructoSnek9000",
+      "URL": "",
+      "Body": [
+        {
+          "X": 8,
+          "Y": 2
+        },
+        {
+          "X": 7,
+          "Y": 2
+        },
+        {
+          "X": 7,
+          "Y": 1
+        },
+        {
+          "X": 6,
+          "Y": 1
+        },
+        {
+          "X": 6,
+          "Y": 0
+        },
+        {
+          "X": 5,
+          "Y": 0
+        },
+        {
+          "X": 4,
+          "Y": 0
+        },
+        {
+          "X": 3,
+          "Y": 0
+        },
+        {
+          "X": 2,
+          "Y": 0
+        },
+        {
+          "X": 2,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 2
+        }
+      ],
+      "Health": 94,
+      "Death": null,
+      "Color": "#5C007A",
+      "HeadType": "smile",
+      "TailType": "block-bum",
+      "Latency": "89",
+      "Shout": ""
+    },
+    {
+      "ID": "gs_jPgTGy6gmCyFgmXYK38jHht9",
+      "Name": "kabby174 / Mambakko",
+      "URL": "",
+      "Body": [
+        {
+          "X": 9,
+          "Y": 0
+        },
+        {
+          "X": 10,
+          "Y": 0
+        },
+        {
+          "X": 10,
+          "Y": 1
+        }
+      ],
+      "Health": 75,
+      "Death": {
+        "Cause": "head-collision",
+        "Turn": 25
+      },
+      "Color": "#5490FE",
+      "HeadType": "bendr",
+      "TailType": "freckled",
+      "Latency": "82",
+      "Shout": ""
+    },
+    {
+      "ID": "gs_WHX8jKg8bMmP6fFB8Dh48YrK",
+      "Name": "lucwashere / Slython",
+      "URL": "",
+      "Body": [
+        {
+          "X": 5,
+          "Y": 9
+        },
+        {
+          "X": 4,
+          "Y": 9
+        },
+        {
+          "X": 3,
+          "Y": 9
+        },
+        {
+          "X": 3,
+          "Y": 8
+        },
+        {
+          "X": 3,
+          "Y": 7
+        },
+        {
+          "X": 3,
+          "Y": 6
+        },
+        {
+          "X": 4,
+          "Y": 6
+        },
+        {
+          "X": 4,
+          "Y": 7
+        },
+        {
+          "X": 4,
+          "Y": 8
+        },
+        {
+          "X": 5,
+          "Y": 8
+        }
+      ],
+      "Health": 82,
+      "Death": null,
+      "Color": "#FC3EC5",
+      "HeadType": "safe",
+      "TailType": "freckled",
+      "Latency": "85",
+      "Shout": ""
+    }
+  ]
+}

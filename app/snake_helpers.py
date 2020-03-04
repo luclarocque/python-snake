@@ -70,7 +70,7 @@ def getFoodDistList(data):
         indices = [indices]
     distances = map(int, distances)
     foodDistList = [(listFood[indices[i]], distances[i]) for i in range(len(distances))]
-    print(foodDistList)
+    # print(foodDistList)
     return foodDistList
 
 
@@ -150,11 +150,12 @@ def getHeadMap(data):
         if snake['id'] == data['you']['id']:
             continue  # skip adding your own head
         opponentHead = ensurePoint(snake['body'][0])
-        opponentBody1 = ensurePoint(snake['body'][1])
         for d in directions:
-            possibleHead = movePoint(opponentHead, d)
-            if possibleHead != opponentBody1:
-                snakeHeads[possibleHead] = len(snake)
+            if not hitAny(data, opponentHead, d):
+                possibleHead = movePoint(opponentHead, d)
+                existingSnakeHeadLength = snakeHeads.get(possibleHead, 0)
+                if len(snake) > existingSnakeHeadLength:  # store only largest nearby snake head
+                    snakeHeads[possibleHead] = len(snake)
     return snakeHeads
 
 
@@ -174,8 +175,10 @@ def avoidHeadMoves(data, headMap):
         # opponentLength: either len of snake, or 0 if no opponent's head can move there
         opponentLength = headMap.get(movedHead, 0)
         if myLength > opponentLength:
+            print("avoidHead moves: adding", d)
             moves |= {d}
             if opponentLength > 0:  # head could be there and we are bigger
+                print("avoidHead killMoves: adding", d)
                 killMoves |= {d}
     possMoves = possibleMoves(data)
     if killMoves:
@@ -201,6 +204,7 @@ def nextMove(data):
     data['foodDistList'] = getFoodDistList(data)
     data['headMap'] = getHeadMap(data)
     # ------------------------------------------------------------------------|
+    print("\n----- DECIDING NEXT MOVE -----")
 
     health = data['you']['health']
     myLength = len(data['you']['body'])
@@ -236,7 +240,7 @@ def nextMove(data):
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
             if mv in foodMoves and size > myLength/2:
-                print ('CHOSEN MOVE:', mv)
+                print ("CHOSEN MOVE", mv)
                 return mv
 
     # If chasing food is not possible settle for avoiding heads in large zones
@@ -247,5 +251,5 @@ def nextMove(data):
     else:
         mv = highFloodMoves[0]
 
-    print ('CHOSEN MOVE:', mv)
+    print ("CHOSEN MOVE", mv)
     return mv
