@@ -149,14 +149,15 @@ def getHeadMap(data):
     for snake in data['board']['snakes']:
         if snake['id'] == data['you']['id']:
             continue  # skip adding your own head
-        opponentHead = snake['body'][0]
+        opponentHead = ensurePoint(snake['body'][0])
+        opponentBody1 = ensurePoint(snake['body'][1])
         for d in directions:
             possibleHead = movePoint(opponentHead, d)
-            snakeHeads[possibleHead] = len(snake)
+            if possibleHead != opponentBody1:
+                snakeHeads[possibleHead] = len(snake)
     return snakeHeads
 
 
-# TODO: perhaps return max 2 possible moves if we can kill a smaller snake
 def avoidHeadMoves(data, headMap):
     """
     avoidHeadMoves returns set of moves that cannot result in losing
@@ -166,14 +167,21 @@ def avoidHeadMoves(data, headMap):
     myLength = len(data['you']['body'])
     head = getHead(data)
 
+    killMoves = set()
     moves = set()
     for d in directions:
         movedHead = movePoint(head, d)
-        opponentLength = headMap.get(movedHead, False)
-        if not opponentLength or myLength > opponentLength:
+        # opponentLength: either len of snake, or 0 if no opponent's head can move there
+        opponentLength = headMap.get(movedHead, 0)
+        if myLength > opponentLength:
             moves |= {d}
+            if opponentLength > 0:  # head could be there and we are bigger
+                killMoves |= {d}
     possMoves = possibleMoves(data)
-    return moves & possMoves
+    if killMoves:
+        return killMoves & possMoves
+    else:
+        return moves & possMoves
 
 
 # TODO: create dictionary of possible moves {key='move': val=rating}
