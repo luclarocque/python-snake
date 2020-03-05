@@ -1,5 +1,6 @@
 from app.snake_helpers import *
 from testing_tools import *
+from visualize_board import visualize
 
 
 def test_hitWall():
@@ -117,17 +118,26 @@ def test_avoidHeadMoves():
 
 
 def test_nextMove():
-    data = resetData(2)
-    # print("should return a single move")
-    assert not hitAny(data, getHead(data), nextMove(data))
+    # data = resetData(2)
+    # assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    # data = resetData(3)
+    # assert not hitAny(data, getHead(data), nextMove(data))
 
-    data = resetData(3)
-    assert not hitAny(data, getHead(data), nextMove(data))
-
-    data = resetData(4)
-    assert not hitAny(data, getHead(data), nextMove(data))
+    # data = resetData(4)
+    # visualize(data)
+    # assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(5)
+    visualize(data)
+    assert not hitAny(data, getHead(data), nextMove(data))
+
+    data = resetData(6)
+    visualize(data)
+    assert not hitAny(data, getHead(data), nextMove(data))
+
+    data = resetData(7)
+    visualize(data)
     assert not hitAny(data, getHead(data), nextMove(data))
 
 
