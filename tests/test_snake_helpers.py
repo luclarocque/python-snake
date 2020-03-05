@@ -128,17 +128,21 @@ def test_nextMove():
     # visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 
-    data = resetData(5)
-    visualize(data)
-    assert not hitAny(data, getHead(data), nextMove(data))
+    # data = resetData(5)
+    # visualize(data)
+    # assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    # data = resetData(6)
+    # visualize(data)
+    # assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    # data = resetData(7)
+    # visualize(data)
+    # assert not hitAny(data, getHead(data), nextMove(data))
 
-    data = resetData(6)
+    data = resetData(8)
     visualize(data)
-    assert not hitAny(data, getHead(data), nextMove(data))
-
-    data = resetData(7)
-    visualize(data)
-    assert not hitAny(data, getHead(data), nextMove(data))
+    # assert not hitAny(data, getHead(data), nextMove(data))
 
 
 if __name__ == "__main__":

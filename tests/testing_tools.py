@@ -12,7 +12,8 @@ def resetData(exampleNum):
             4: '../examples/example_3_zones.json',
             5: '../examples/example_avoid_head.json',
             6: '../examples/example_food_head_priority_proper.json',
-            7: '../examples/example_goright_avoid_equal_head_proper.json'
+            7: '../examples/example_goright_avoid_equal_head_proper.json',
+            8: '../examples/example_avoid_head_down_proper.json'
         }
         return switch[fileNumber]
 
@@ -61,5 +62,5 @@ def importExample(jsonFile, w=11, h=11):
 
 
 if __name__ == "__main__":
-    # importExample('../examples/example_goright_avoid_equal_head.json')
+    importExample('../examples/example_avoid_head_down.json')
     pass

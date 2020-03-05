@@ -175,10 +175,8 @@ def avoidHeadMoves(data, headMap):
         # opponentLength: either len of snake, or 0 if no opponent's head can move there
         opponentLength = headMap.get(movedHead, 0)
         if myLength > opponentLength:
-            print("avoidHead moves: adding", d)
             moves |= {d}
             if opponentLength > 0:  # head could be there and we are bigger
-                print("avoidHead killMoves: adding", d)
                 killMoves |= {d}
     possMoves = possibleMoves(data)
     if killMoves:
@@ -201,7 +199,7 @@ def nextMove(data):
     # INITIALIZE NEW DATA KEYS HERE ------------------------------------------|
     data['snakeMap'] = mapSnakes(data)
     data['floodSizeList'] = getFloodSizeList(data, data['snakeMap'])
-    data['foodDistList'] = getFoodDistList(data)
+    # data['foodDistList'] = getFoodDistList(data)
     data['headMap'] = getHeadMap(data)
     # ------------------------------------------------------------------------|
     print("\n----- DECIDING NEXT MOVE -----")
@@ -214,7 +212,6 @@ def nextMove(data):
     print("foodMoves", foodMoves)
 
     # set of moves that avoid heads of larger snakes
-    # TODO: actively target heads of smaller snakes?
     headMoves = avoidHeadMoves(data, data['headMap'])
     print("headMoves", headMoves)
 
@@ -225,12 +222,6 @@ def nextMove(data):
     # list of moves only from highFloodMovesSizes
     highFloodMoves = [tup[0] for tup in highFloodMovesSizes]
     # print("highFloodMoves", highFloodMoves)
-
-    # Moves in highFloodMovesSizes must be possible
-    #   Choose the first move that leads to food as well
-    # for mv, size in highFloodMovesSizes:
-    #     if mv in foodMoves and size > myLength/2:
-    #         return mv
 
     # TODO: must find a way to balance priorities.
     #   - Food is lowest priority, but increases (exponentially?) with decreasing health
