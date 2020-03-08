@@ -7,11 +7,11 @@ from testing_tools import resetData
 
 def visualize(data):
     w, h = getWidthHeight(data)
-    snakes = data['board']['snakes']
 
     fig, ax = plt.subplots()
 
-    for snake in snakes:
+    # plot snakes
+    for snake in data['board']['snakes']:
         coords = map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(snake['body']))
         if snake['death'] is None:
             if snake['name'].lower() == "lucwashere / slython":
@@ -19,6 +19,11 @@ def visualize(data):
             else:
                 plt.scatter(*zip(*coords), s=700, marker='s')
             plt.scatter(*coords[0], c='k', s=350, marker='*')
+
+    # plot food
+    food = data['board']['food']
+    coords = map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(food))
+    plt.scatter(*zip(*coords), c='m', s=250, marker='o')
 
     ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
     ax.set_xticks(np.arange(0, w))
@@ -31,5 +36,5 @@ def visualize(data):
 
 
 if __name__ == "__main__":
-    data = resetData(7)
+    data = resetData(8)
     visualize(data)

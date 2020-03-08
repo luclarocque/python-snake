@@ -71,7 +71,7 @@ def test_avoidEdges():
 
 
 def test_distance():
-    a = (1,2)
+    a = (1, 2)
     b = {'x': 3, 'y': 1}
     # print("should be 3")
     assert distance(a, b) == 3
@@ -131,7 +131,7 @@ def test_nextMove():
     # data = resetData(5)
     # visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
-    #
+
     # data = resetData(6)
     # visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
@@ -140,7 +140,11 @@ def test_nextMove():
     # visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 
-    data = resetData(8)
+    # data = resetData(8)
+    # visualize(data)
+    # assert not hitAny(data, getHead(data), nextMove(data))
+
+    data = resetData(9)
     visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 

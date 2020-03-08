@@ -155,7 +155,7 @@ def getHeadMap(data):
                 possibleHead = movePoint(opponentHead, d)
                 existingSnakeHeadLength = snakeHeads.get(possibleHead, 0)
                 if len(snake) > existingSnakeHeadLength:  # store only largest nearby snake head
-                    snakeHeads[possibleHead] = len(snake)
+                    snakeHeads[possibleHead] = len(snake['body'])
     return snakeHeads
 
 
@@ -165,6 +165,7 @@ def avoidHeadMoves(data, headMap):
         head-on collision.
     NOTE: Only returns moves that do not result in direct collision
     """
+    print('headMap', headMap)
     myLength = len(data['you']['body'])
     head = getHead(data)
 
@@ -185,13 +186,6 @@ def avoidHeadMoves(data, headMap):
         return moves & possMoves
 
 
-# TODO: create dictionary of possible moves {key='move': val=rating}
-#   increase score for moving toward food, avoiding edges, staying in
-#   large zones, etc.
-def rateMoves(data, possMoves):
-    pass
-
-
 def nextMove(data):
     """
     nextMove is the main function used to return a single move to the API.
@@ -204,7 +198,7 @@ def nextMove(data):
     # ------------------------------------------------------------------------|
     print("\n----- DECIDING NEXT MOVE -----")
 
-    health = data['you']['health']
+    # health = data['you']['health']
     myLength = len(data['you']['body'])
 
     # set of moves that bring you closer to food
@@ -223,7 +217,7 @@ def nextMove(data):
     highFloodMoves = [tup[0] for tup in highFloodMovesSizes]
     # print("highFloodMoves", highFloodMoves)
 
-    # TODO: must find a way to balance priorities.
+    # Balance priorities.
     #   - Food is lowest priority, but increases (exponentially?) with decreasing health
     #   - headMoves is high priority, but it is conservative: moves not in this set are not
     #       guaranteed to result in death, but death is not unlikely
