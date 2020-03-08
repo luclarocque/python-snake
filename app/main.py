@@ -1,6 +1,5 @@
 import json
 import os
-import random
 import bottle
 from snake_helpers import nextMove
 
@@ -47,10 +46,10 @@ def start():
             initialize your snake state here using the
             request's data if necessary.
     """
-    games[data['game']['id']] = data
     print "\n", "*-"*5, 'START GAME', "-*"*5, "\n"
     print(json.dumps(data))
 
+    games[data['game']['id']] = data
     color = "#FC3EC5"
 
     return start_response(color)
@@ -79,8 +78,9 @@ def end():
     TODO: If your snake AI was stateful,
         clean up any stateful objects here.
     """
+    print('\n*------END------*')
     print(json.dumps(data))
-    games[data['game']['id']] = {}
+    games.pop(data['game']['id'])
 
     return end_response()
 
