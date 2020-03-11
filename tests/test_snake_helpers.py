@@ -132,19 +132,23 @@ def test_nextMove():
     # visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 
-    # data = resetData(6)
-    # visualize(data)
+    data = resetData(6)
+    visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
     #
-    # data = resetData(7)
-    # visualize(data)
+    data = resetData(7)
+    visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 
-    # data = resetData(8)
-    # visualize(data)
+    data = resetData(8)
+    visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(9)
+    visualize(data)
+    # assert not hitAny(data, getHead(data), nextMove(data))
+
+    data = resetData(10)
     visualize(data)
     # assert not hitAny(data, getHead(data), nextMove(data))
 

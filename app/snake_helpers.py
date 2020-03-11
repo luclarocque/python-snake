@@ -7,8 +7,9 @@ directions = ('up', 'down', 'left', 'right')
 def mapSnakes(data):
     snakeBodyPoints = {}
     for snake in data['board']['snakes']:
-        for snakePoint in snake['body'][0:-1]:  # do not worry about hitting tail
-            snakeBodyPoints[(snakePoint['x'], snakePoint['y'])] = True
+        if snake['death'] is None:
+            for snakePoint in snake['body'][0:-1]:  # do not worry about hitting tail
+                snakeBodyPoints[(snakePoint['x'], snakePoint['y'])] = True
     return snakeBodyPoints
 
 
@@ -98,6 +99,7 @@ def getFoodMoves(data, k=3):
     return foodMoves & possMoves
 
 
+# TODO: perhaps stop iterating when there is a bottleneck (single direction of growth)
 def flood(data, point, snakeMap):
     """
     flood returns a dictionary of vacant coords (incl. tails) in the zone
@@ -135,9 +137,21 @@ def getFloodSizeList(data, snakeMap):
     floodSizeList = []
     for d in directions:
         floodSet = flood(data, movePoint(head, d), snakeMap)
-        floodSizeList.append((d, len(floodSet)))
+        size = len(floodSet)
+        if size > 0:
+            floodSizeList.append((d, size))
+        # floodSet = flood(data, movePoint(head, d), snakeMap)
+        # floodSizeList.append((d, len(floodSet)))
     # sort in order of descending flood size
     return sorted(floodSizeList, key=lambda x: x[1], reverse=True)
+
+
+def meanFloodSize(floodSizeList):
+    """
+    meanFloodSize returns the mean of all sizes given the output of getFloodSizeList.
+    """
+    sizes = map(lambda x: x[1], floodSizeList)
+    return sum(sizes)/len(sizes)
 
 
 def getHeadMap(data):
@@ -159,7 +173,7 @@ def getHeadMap(data):
     return snakeHeads
 
 
-def avoidHeadMoves(data, headMap):
+def avoidHeadMoves(data, headMap, kill=True):
     """
     avoidHeadMoves returns set of moves that cannot result in losing
         head-on collision.
@@ -180,7 +194,7 @@ def avoidHeadMoves(data, headMap):
             if opponentLength > 0:  # head could be there and we are bigger
                 killMoves |= {d}
     possMoves = possibleMoves(data)
-    if killMoves:
+    if kill and killMoves:  # use killMoves if any exist unless kill flag is False
         return killMoves & possMoves
     else:
         return moves & possMoves
@@ -210,7 +224,9 @@ def nextMove(data):
     print("headMoves", headMoves)
 
     # list of (move, size) that lead to open space, in descending order
-    highFloodMovesSizes = list(filter(lambda x: x[1] > 0, data['floodSizeList']))
+    print('entire floodSizeList', data['floodSizeList'])
+    avgSize = meanFloodSize(data['floodSizeList'])
+    highFloodMovesSizes = list(filter(lambda x: x[1] >= avgSize, data['floodSizeList']))
     print("highFloodMovesSizes", highFloodMovesSizes)
 
     # list of moves only from highFloodMovesSizes
@@ -225,15 +241,15 @@ def nextMove(data):
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
             if mv in foodMoves and size > myLength/2:
-                print ("CHOSEN MOVE", mv)
+                print ("CHOSEN MOVE => food loop", mv)
                 return mv
 
     # If chasing food is not possible settle for avoiding heads in large zones
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
-            print ("CHOSEN MOVE", mv)
+            print ("CHOSEN MOVE => ignoring food", mv)
             return mv
 
-    mv = highFloodMoves[0]
-    print ("CHOSEN MOVE", mv)
+    mv = data['floodSizeList'][0]
+    print ("CHOSEN MOVE => last resort", mv)
     return mv

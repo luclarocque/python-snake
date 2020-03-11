@@ -14,7 +14,8 @@ def resetData(exampleNum):
             6: '../examples/example_food_head_priority_proper.json',
             7: '../examples/example_goright_avoid_equal_head_proper.json',
             8: '../examples/example_avoid_head_down_proper.json',
-            9: '../examples/example_kill_and_food_proper.json'
+            9: '../examples/example_kill_and_food_proper.json',
+            10: '../examples/example_flood_check_proper.json'
         }
         return switch[fileNumber]
 
@@ -23,6 +24,15 @@ def resetData(exampleNum):
         data = json.load(jsonData)
     nextMove(data)  # call this here since it initializes some keys in data
     return data
+
+
+def snakeIsMe(snake):
+    """
+    snakeIsMe returns a boolean that is True only if the given snake
+        (a snake dict element from data['snakes']) is my own snake.
+    """
+    name = snake['name'].lower()
+    return name == 'slython' or name == 'lucwashere / slython'
 
 
 def lowerDict(dic):
@@ -52,7 +62,7 @@ def importExample(jsonFile, w=11, h=11):
         data['board']['width'] = w
         data['board']['height'] = h
         for snake in data['board']['snakes']:
-            if snake['name'] == "lucwashere / Slython":
+            if snakeIsMe(snake):
                 data['you'] = snake
     newFile = '..' + jsonFile.split('.')[-2] + '_proper.json'
     with open(newFile, 'w') as f:
@@ -63,5 +73,5 @@ def importExample(jsonFile, w=11, h=11):
 
 
 if __name__ == "__main__":
-    importExample('../examples/example_kill_and_food.json')
+    importExample('../examples/example_flood_check.json')
     pass

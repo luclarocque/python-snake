@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as ticker
 from app.coord_tools import *
-from testing_tools import resetData
+from testing_tools import resetData, snakeIsMe
 
 
 def visualize(data):
@@ -14,7 +14,7 @@ def visualize(data):
     for snake in data['board']['snakes']:
         coords = map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(snake['body']))
         if snake['death'] is None:
-            if snake['name'].lower() == "lucwashere / slython":
+            if snakeIsMe(snake):
                 plt.scatter(*zip(*coords), c='pink', s=700, marker='s')
             else:
                 plt.scatter(*zip(*coords), s=700, marker='s')
