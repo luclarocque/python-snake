@@ -7,7 +7,7 @@ directions = ('up', 'down', 'left', 'right')
 def mapSnakes(data):
     snakeBodyPoints = {}
     for snake in data['board']['snakes']:
-        if snake['death'] is None:
+        if snake.get('death', None) is None:
             for snakePoint in snake['body'][0:-1]:  # do not worry about hitting tail
                 snakeBodyPoints[(snakePoint['x'], snakePoint['y'])] = True
     return snakeBodyPoints

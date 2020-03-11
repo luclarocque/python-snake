@@ -13,7 +13,7 @@ def visualize(data):
     # plot snakes
     for snake in data['board']['snakes']:
         coords = map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(snake['body']))
-        if snake['death'] is None:
+        if snake.get('death', None) is None:
             if snakeIsMe(snake):
                 plt.scatter(*zip(*coords), c='pink', s=700, marker='s')
             else:
