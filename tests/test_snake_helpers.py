@@ -1,6 +1,6 @@
 from app.snake_helpers import *
-from testing_tools import *
-from visualize_board import visualize
+from tests.testing_tools import *
+from tests.visualize_board import visualize
 
 
 def test_hitWall():
@@ -100,9 +100,7 @@ def test_getFloodSizeList():
     floodSizeList = getFloodSizeList(data, snakeMap)
     print("floodSizeList", floodSizeList)
     assert floodSizeList == [('right', 89),
-                             ('left', 1),
-                             ('up', 0),
-                             ('down', 0)]
+                             ('left', 1)]
 
 
 def test_avoidHeadMoves():
@@ -149,8 +147,8 @@ def test_nextMove():
     # assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(10)
-    visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
+    # visualize(data)
+    assert not hitAny(data, getHead(data), nextMove(data))
 
 
 if __name__ == "__main__":

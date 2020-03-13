@@ -1,5 +1,5 @@
 from scipy import spatial
-from coord_tools import *
+from app.coord_tools import *
 
 directions = ('up', 'down', 'left', 'right')
 
@@ -69,7 +69,7 @@ def getFoodDistList(data):
     if isinstance(distances, float):  # kdtree.query returns float if only 1 food
         distances = [distances]
         indices = [indices]
-    distances = map(int, distances)
+    distances = list(map(int, distances))
     foodDistList = [(listFood[indices[i]], distances[i]) for i in range(len(distances))]
     # print(foodDistList)
     return foodDistList
@@ -150,7 +150,7 @@ def meanFloodSize(floodSizeList):
     """
     meanFloodSize returns the mean of all sizes given the output of getFloodSizeList.
     """
-    sizes = map(lambda x: x[1], floodSizeList)
+    sizes = list(map(lambda x: x[1], floodSizeList))
     return sum(sizes)/len(sizes)
 
 
@@ -241,15 +241,15 @@ def nextMove(data):
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
             if mv in foodMoves and size > myLength/2:
-                print ("CHOSEN MOVE => food loop", mv)
+                print("CHOSEN MOVE => food loop", mv)
                 return mv
 
     # If chasing food is not possible settle for avoiding heads in large zones
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
-            print ("CHOSEN MOVE => ignoring food", mv)
+            print("CHOSEN MOVE => ignoring food", mv)
             return mv
 
-    mv = data['floodSizeList'][0]
-    print ("CHOSEN MOVE => last resort", mv)
+    mv = data['floodSizeList'][0][0]  # data['floodSizeList'] type: [(mv, size), ...]
+    print("CHOSEN MOVE => last resort", mv)
     return mv

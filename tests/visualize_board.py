@@ -12,7 +12,7 @@ def visualize(data):
 
     # plot snakes
     for snake in data['board']['snakes']:
-        coords = map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(snake['body']))
+        coords = list(map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(snake['body'])))
         if snake.get('death', None) is None:
             if snakeIsMe(snake):
                 plt.scatter(*zip(*coords), c='pink', s=700, marker='s')
@@ -22,7 +22,7 @@ def visualize(data):
 
     # plot food
     food = data['board']['food']
-    coords = map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(food))
+    coords = list(map(lambda p: (p[0] + 0.5, p[1] + 0.5), listDictToTuple(food)))
     plt.scatter(*zip(*coords), c='m', s=250, marker='o')
 
     ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
