@@ -226,11 +226,11 @@ def nextMove(data):
     # list of (move, size) that lead to open space, in descending order
     print('entire floodSizeList', data['floodSizeList'])
     avgSize = meanFloodSize(data['floodSizeList'])
-    highFloodMovesSizes = list(filter(lambda x: x[1] >= avgSize, data['floodSizeList']))
+    highFloodMovesSizes = list(filter(lambda x: x[1] >= min(avgSize, 3), data['floodSizeList']))
     print("highFloodMovesSizes", highFloodMovesSizes)
 
-    # list of moves only from highFloodMovesSizes
-    highFloodMoves = [tup[0] for tup in highFloodMovesSizes]
+    # list of moves only (no tuples => no sizes) from highFloodMovesSizes
+    highFloodMoves = [mv for mv, sz in highFloodMovesSizes]
     # print("highFloodMoves", highFloodMoves)
 
     # Balance priorities.
@@ -240,16 +240,16 @@ def nextMove(data):
     #   - highFloodMovesSizes with large size are high priority
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
-            if mv in foodMoves and size > myLength/2:
+            if mv in foodMoves and size >= avgSize:
                 print("CHOSEN MOVE => food loop", mv)
                 return mv
 
-    # If chasing food is not possible settle for avoiding heads in large zones
+    # If chasing food is not possible settle for avoiding/targeting heads in large zones
     for mv, size in highFloodMovesSizes:
         if mv in headMoves:
             print("CHOSEN MOVE => ignoring food", mv)
             return mv
 
-    mv = data['floodSizeList'][0][0]  # data['floodSizeList'] type: [(mv, size), ...]
+    mv = highFloodMoves[0]  # data['floodSizeList'] type: [(mv, size), ...]
     print("CHOSEN MOVE => last resort", mv)
     return mv

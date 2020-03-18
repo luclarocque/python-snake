@@ -116,35 +116,35 @@ def test_avoidHeadMoves():
 
 
 def test_nextMove():
-    # data = resetData(2)
-    # assert not hitAny(data, getHead(data), nextMove(data))
+    data = resetData(2)
+    assert not hitAny(data, getHead(data), nextMove(data))
     #
-    # data = resetData(3)
-    # assert not hitAny(data, getHead(data), nextMove(data))
-
-    # data = resetData(4)
+    data = resetData(3)
+    assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    data = resetData(4)
     # visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
-
-    # data = resetData(5)
+    assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    data = resetData(5)
     # visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
-
-    # data = resetData(6)
+    assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    data = resetData(6)
     # visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
-
-    # data = resetData(7)
+    assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    data = resetData(7)
     # visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
-
-    # data = resetData(8)
+    assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    data = resetData(8)
     # visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
-
-    # data = resetData(9)
+    assert not hitAny(data, getHead(data), nextMove(data))
+    #
+    data = resetData(9)
     # visualize(data)
-    # assert not hitAny(data, getHead(data), nextMove(data))
+    assert not hitAny(data, getHead(data), nextMove(data))
 
     data = resetData(10)
     # visualize(data)
